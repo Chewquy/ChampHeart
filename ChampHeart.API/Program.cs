@@ -2,6 +2,8 @@ using ChampHeart.API.Data;
 using ChampHeart.API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ChampHeart.API.Services;
+using ChampHeart.API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,9 @@ builder.Services
     .AddIdentityCore<ApplicationUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Register booking service
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 // Additional services will be added here later
 
