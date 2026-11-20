@@ -15,42 +15,35 @@ namespace ChampHeart.API.Services
             _context = context;
         }
 
-        // Create a new booking
-        public async Task<BookingResponseDTO> CreateBookingAsync(
-            CreateBookingDTO request,
-            string userId)
+        public async Task<BookingResponseDTO> CreateBookingAsync(CreateBookingDTO request, string userId)
         {
+            // Validation
             if (string.IsNullOrWhiteSpace(userId))
             {
-                throw new UnauthorizedAccessException(
-                    "You must be logged in to create a booking.");
+                throw new UnauthorizedAccessException("You must be logged in to create a booking.");
             }
 
-            // Validate appointment dates
             if (request.EndTime <= request.StartTime)
             {
-                throw new ArgumentException(
-                    "End time must be after start time.");
+                throw new ArgumentException("End time must be after start time.");
             }
 
             if (request.StartTime <= DateTimeOffset.UtcNow)
             {
-                throw new ArgumentException(
-                    "Cannot create a booking in the past.");
+                throw new ArgumentException("Cannot create a booking in the past.");
             }
 
-            // Check if the resource exists and is active
-            var resource = await _context.Resources
-                .FirstOrDefaultAsync(r =>
+            var resource = await _context.Resources.FirstOrDefaultAsync(r =>
                     r.Id == request.ResourceId && r.IsActive);
 
             if (resource == null)
             {
-                throw new KeyNotFoundException(
-                    "Resource not found or unavailable.");
+                throw new KeyNotFoundException("Resource not found or unavailable.");
             }
 
-            // Create the booking
+
+
+
             var booking = new Booking
             {
                 ResourceId = resource.Id,
@@ -61,11 +54,13 @@ namespace ChampHeart.API.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            // Save to SQL Server
+
+
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
-            // Return the booking response
+
+
             return new BookingResponseDTO
             {
                 Id = booking.Id,
@@ -78,14 +73,12 @@ namespace ChampHeart.API.Services
             };
         }
 
-        // Get all bookings belonging to a member
-        public async Task<List<BookingResponseDTO>> GetMyBookingsAsync(
-            string userId)
+        public async Task<List<BookingResponseDTO>> GetMyBookingsAsync(string userId)
         {
+            // Validation
             if (string.IsNullOrWhiteSpace(userId))
             {
-                throw new UnauthorizedAccessException(
-                    "You must be logged in.");
+                throw new UnauthorizedAccessException("You must be logged in.");
             }
 
             return await _context.Bookings
@@ -104,5 +97,42 @@ namespace ChampHeart.API.Services
                 })
                 .ToListAsync();
         }
+
+        public async Task<bool> CancelBookingAsync(int bookingId, string userId)
+        {
+            var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == bookingId);
+
+            // Validation
+            if (booking == null)
+            {
+                throw new KeyNotFoundException("Booking not found.");
+            }
+
+            if (booking.UserId != userId)
+            {
+                throw new UnauthorizedAccessException("You cannot cancel another user's booking.");
+            }
+
+            if (booking.Status == BookingStatus.Cancelled || booking.Status == BookingStatus.Rejected)
+            { 
+                throw new InvalidOperationException("This booking cannot be cancelled."); 
+            }
+
+            if (booking.StartTime <= DateTime.UtcNow.AddHours(24))
+            {
+                throw new InvalidOperationException("Bookings must be cancelled at least 24 hours in advance.");
+            }
+
+
+
+            booking.Status = BookingStatus.Cancelled;
+
+
+            await _context.SaveChangesAsync();
+
+
+            return true;
+        }
+
     }
 }
