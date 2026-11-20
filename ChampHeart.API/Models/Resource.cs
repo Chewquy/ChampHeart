@@ -22,7 +22,6 @@ namespace ChampHeart.API.Models
 
         public bool IsActive { get; set; } = true;
 
-        public ICollection<Booking> Bookings { get; set; }
-            = new List<Booking>();
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

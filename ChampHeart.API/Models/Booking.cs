@@ -23,11 +23,9 @@ public class Booking
     public DateTime EndTime { get; set; }
 
     [Required]
-    public BookingStatus Status { get; set; }
-        = BookingStatus.Pending;
+    public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
-    public DateTime CreatedAt { get; set; }
-        = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
 public enum BookingStatus
