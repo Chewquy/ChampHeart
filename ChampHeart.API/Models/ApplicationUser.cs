@@ -1,6 +1,9 @@
-﻿namespace ChampHeart.API.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace ChampHeart.API.Models
 {
-    public class ApplicationUser
+    public class ApplicationUser : IdentityUser
     {
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }
