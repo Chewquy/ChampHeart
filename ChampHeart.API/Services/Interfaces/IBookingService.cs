@@ -1,6 +1,14 @@
-﻿namespace ChampHeart.API.Services.Interfaces
+﻿using ChampHeart.API.DTOs;
+
+namespace ChampHeart.API.Services.Interfaces
 {
     public interface IBookingService
     {
+        Task<BookingResponseDTO> CreateBookingAsync(
+        CreateBookingDTO request,
+        string userId);
+
+        Task<List<BookingResponseDTO>> GetMyBookingsAsync(
+            string userId);
     }
 }
