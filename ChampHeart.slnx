@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ChampHeart.API/ChampHeart.API.csproj" />
+  <Project Path="ChampHeart.MVC/ChampHeart.MVC.csproj" />
+  <Project Path="ChampHeart.Tests/ChampHeart.Tests.csproj" />
+</Solution>

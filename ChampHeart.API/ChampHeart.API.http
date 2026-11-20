@@ -1,0 +1,6 @@
+@ChampHeart.API_HostAddress = http://localhost:5274
+
+GET {{ChampHeart.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
