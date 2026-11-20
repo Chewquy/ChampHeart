@@ -9,5 +9,9 @@ namespace ChampHeart.API.Services.Interfaces
         Task<List<BookingResponseDTO>> GetMyBookingsAsync(string userId);
 
         Task<bool> CancelBookingAsync(int bookingId, string userId);
+
+        Task<BookingResponseDTO> ApproveBookingAsync(int bookingId);
+
+        Task<BookingResponseDTO> RejectBookingAsync(int bookingId);
     }
 }
