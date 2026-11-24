@@ -100,4 +100,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// Initialize Identity roles and sample users
+using (var scope = app.Services.CreateScope())
+{
+    await IdentitySeeder.SeedAsync(
+        scope.ServiceProvider,
+        app.Configuration);
+}
+
 app.Run();
