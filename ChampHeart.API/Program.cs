@@ -1,5 +1,7 @@
 using ChampHeart.API.Data;
 using ChampHeart.API.Models;
+using ChampHeart.API.Data.Repositories;
+using ChampHeart.API.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -85,8 +87,10 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+//register services
 builder.Services.AddScoped<ITokenService, TokenService>();
-// Register booking service
+builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
+builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 
 // Additional services will be added here later
