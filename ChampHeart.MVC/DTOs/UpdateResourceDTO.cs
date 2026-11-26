@@ -1,0 +1,25 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ChampHeart.MVC.DTOs;
+
+// Sent to PUT api/admin/resources/{id}
+public class UpdateResourceDTO
+{
+    [Required(ErrorMessage = "Resource name is required.")]
+    [MaxLength(100)]
+    public string Name { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Category is required.")]
+    [MaxLength(50)]
+    public string Category { get; set; } = string.Empty;
+
+    [MaxLength(500)]
+    public string Description { get; set; } = string.Empty;
+
+    [Range(1, 100,
+        ErrorMessage = "Capacity must be between 1 and 100.")]
+    public int Capacity { get; set; } = 1;
+
+    [Required]
+    public bool? IsActive { get; set; }
+}
