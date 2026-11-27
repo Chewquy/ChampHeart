@@ -1,3 +1,5 @@
+using ChampHeart.MVC.Services;
+using ChampHeart.MVC.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +34,17 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+
+// HttpClient for calling the WebAPI (base URL comes from appsettings.json)
+var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"]
+    ?? throw new InvalidOperationException(
+        "API base URL is missing.");
+
+//register API services
+builder.Services.AddHttpClient<IAuthApiService, AuthApiService>(client =>
+{
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
 
 var app = builder.Build();
 
