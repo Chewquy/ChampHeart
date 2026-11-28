@@ -94,6 +94,49 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    // GET: /Account/Register
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult Register()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        return View(new RegisterViewModel());
+    }
+
+    // POST: /Account/Register
+    [AllowAnonymous]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        // Create the account in the API (new users get the Member role)
+        var result = await _authApiService.RegisterAsync(new RegisterDTO
+        {
+            Email = model.Email,
+            Password = model.Password,
+            ConfirmPassword = model.ConfirmPassword
+        });
+
+        if (!result.Success)
+        {
+            ModelState.AddModelError("", result.ErrorMessage);
+            return View(model);
+        }
+
+        TempData["SuccessMessage"] = "Account created successfully. You can now log in.";
+
+        return RedirectToAction("Login");
+    }
+
     // POST: /Account/Logout
     [Authorize]
     [HttpPost]
